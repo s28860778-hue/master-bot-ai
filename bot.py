@@ -2,14 +2,31 @@ import telebot
 import google.generativeai as genai
 from PIL import Image
 import io
+import os
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
 
-# গুগল এআই-এর আসল জেমিনি কানেকশন সেটিংস (আপনার দেওয়া আসল চাবি)
+# গুগল এআই-এর আসল জেমিনি কানেকশন সেটিংস
 API_KEY = "AQ.Ab8RN6IPmYueqjEBquceDkLoYEwt85xL"
 genai.configure(api_key=API_KEY)
 
 # আপনার টেলিগ্রাম বটের টোকেন যা BotFather দিয়েছে
 TELEGRAM_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+# Render এর পোর্ট বাইন্ডিং এরর দূর করার জন্য ডামি ব্যাকগ্রাউন্ড সার্ভার
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        self.wfile.write(b"Bot is Alive!")
+
+def run_health_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+    print(f"🌍 Health check server running on port {port}")
+    server.serve_forever()
 
 print("🤖 MASTER BOT AI IS RUNNING... TELEGRAM-এ চেক করুন...")
 
@@ -59,11 +76,9 @@ def handle_chart_image(message):
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content([trading_prompt, img])
         
-        # এআই এর দেওয়া চকমকে উত্তরটি HTML মোডে টেলিগ্রামে পাঠানো
         bot.reply_to(message, response.text, parse_mode="HTML")
 
     except Exception as e:
-        # কোনো কারণে সার্ভার এরর দিলে ব্যাকআপ জেনুইন চকমকে HTML সিগন্যাল দেওয়া
         backup_text = (
             "📊 <b>MASTER BOT AI SIGNAL OUTPUT</b> 📊\n\n"
             "• 🎯 <b>সম্ভাবনা ডিরেকশন:</b> <code>SELL / DOWN 🔴</code>\n"
@@ -73,4 +88,7 @@ def handle_chart_image(message):
         bot.reply_to(message, backup_text, parse_mode="HTML")
 
 if __name__ == "__main__":
+    # ব্যাকграউন্ডে ডামি সার্ভার চালু করা যেন Render পোর্ট এরর না দেয়
+    threading.Thread(target=run_health_server, daemon=True).start()
+    # টেলিগ্রাম বট পোলিং চালু
     bot.polling(none_stop=True)
