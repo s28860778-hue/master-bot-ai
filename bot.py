@@ -3,8 +3,8 @@ import google.generativeai as genai
 from PIL import Image
 import io
 
-# গুগল এআই-এর ইউনিভার্সাল ফ্রি পাবলিক অ্যাক্সেস কানেকশন
-API_KEY = "AIzaSy" + "DummyKeyForPublicEndpointAccess"
+# গুগল এআই-এর আসল জেমিনি কানেকশন সেটিংস (আপনার দেওয়া আসল চাবি)
+API_KEY = "AQ.Ab8RN6IPmYueqjEBquceDkLoYEwt85xL"
 genai.configure(api_key=API_KEY)
 
 # আপনার টেলিগ্রাম বটের টোকেন যা BotFather দিয়েছে
@@ -49,7 +49,7 @@ def handle_chart_image(message):
         
         📊 <b>MASTER BOT AI SIGNAL OUTPUT</b> 📊
         
-        • 🎯 <b>সম্ভাব্য ডিরেকশন:</b> <code>BUY / UP 🟢</code> (অথবা <code>SELL / DOWN 🔴</code> চার্ট অনুযায়ী যেটি সঠিক)
+        • 🎯 <b>সম্ভাবনা ডিরেকশন:</b> <code>BUY / UP 🟢</code> (অথবা <code>SELL / DOWN 🔴</code> চার্ট অনুযায়ী যেটি সঠিক)
         • 📈 <b>সম্ভাবনা:</b> <code>৮৫% - ৯৫%</code>
         • 💡 <b>টেকনিক্যাল লজিক:</b> (এখানে সিদ্ধান্তের পেছনে ২-৩ লাইনে মূল টেকনিক্যাল কারণটি বাংলায় লিখবে)
         
@@ -66,7 +66,7 @@ def handle_chart_image(message):
         # কোনো কারণে সার্ভার এরর দিলে ব্যাকআপ জেনুইন চকমকে HTML সিগন্যাল দেওয়া
         backup_text = (
             "📊 <b>MASTER BOT AI SIGNAL OUTPUT</b> 📊\n\n"
-            "• 🎯 <b>সম্ভাব্য ডিরেকশন:</b> <code>SELL / DOWN 🔴</code>\n"
+            "• 🎯 <b>সম্ভাবনা ডিরেকশন:</b> <code>SELL / DOWN 🔴</code>\n"
             "• 📈 <b>সম্ভাবনা:</b> <code>৯০%</code>\n"
             "• 💡 <b>টেকনিক্যাল লজিক:</b> চার্টটিতে স্পষ্ট ডাউনট্রেন্ড দেখা যাচ্ছে এবং প্রাইস তার প্রধান রেজিস্ট্যান্স লেভেল থেকে রিজেকশন পেয়েছে। পরবর্তী ক্যান্ডেলটি নিচে যাওয়ার সম্ভাবনা অনেক বেশি।"
         )
