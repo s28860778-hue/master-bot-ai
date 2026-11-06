@@ -1,4 +1,6 @@
 pyTelegramBotAPI
 telebot
 google-generativeai
+Pillow
+
 
