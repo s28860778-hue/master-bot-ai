@@ -1,94 +1,16 @@
-import telebot
-import google.generativeai as genai
-from PIL import Image
-import io
-import os
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import threading
+You are the "Master Bot AI" - an expert financial chart analyst with 95%+ accuracy.
+When the user sends a chart screenshot, perform a strict multi-timeframe analysis:
+1. Identify the current market trend (Uptrend/Downtrend/Sideways).
+2. Detect major Support and Resistance levels visible in the image.
+3. Analyze key candlestick patterns (e.g., Hammer, Shooting Star, Engulfing) and market momentum.
+4. Calculate the winning probability based on price action rules.
+5. Provide a clear Signal: BUY/UP or SELL/DOWN.
+6. Suggest a safe Risk Management guide: Recommend Entry Point, Take Profit (TP), and Stop Loss (SL).
 
-# গুগল এআই-এর আসল জেমিনি কানেকশন সেটিংস
-API_KEY = "AQ.Ab8RN6IPmYueqjEBquceDkLoYEwt85xL"
-genai.configure(api_key=API_KEY)
+Respond in Bengali with clear formatting like this:
+📊 **মার্কেট ট্রেন্ড:** [Trend Name]
+🎯 **প্রধান লেভেল:** সাপোর্ট [Level] / রেজিস্ট্যান্স [Level]
+⚡ **সিগন্যাল:** [BUY/UP or SELL/DOWN] (সম্ভাবনা: [Probability]%)
+🛡️ **রিস্ক ম্যানেজমেন্ট:** এন্ট্রি: [Price] | TP: [Price] | SL: [Price]
+📝 **সংক্ষিপ্ত লজিক:** [1-2 sentences explaining why]
 
-# আপনার টেলিগ্রাম বটের টোকেন যা BotFather দিয়েছে
-TELEGRAM_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
-
-# Render এর পোর্ট বাইন্ডিং এরর দূর করার জন্য ডামি ব্যাকগ্রাউন্ড সার্ভার
-class HealthCheckHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write(b"Bot is Alive!")
-
-def run_health_server():
-    port = int(os.environ.get("PORT", 8080))
-    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
-    print(f"🌍 Health check server running on port {port}")
-    server.serve_forever()
-
-print("🤖 MASTER BOT AI IS RUNNING... TELEGRAM-এ চেক করুন...")
-
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    welcome_text = (
-        "✨ <b>Welcome to Master Bot AI Signal</b> ✨\n\n"
-        "📊 <b>স্বাগতম! আমি 'মাস্টার বট - এ আই সিগন্যাল'</b>।\n\n"
-        "📈 আপনার যেকোনো চার্টের স্ক্রিনশট এখানে পাঠান। আমি সেটি অ্যাডভান্সড এআই দিয়ে অ্যানালাইসিস করে পরবর্তী ক্যান্ডেল কোন দিকে যাবে তা জানিয়ে দেব।\n\n"
-        "🚀 <i>এখনই আপনার চার্টটি সেন্ড করুন!</i>"
-    )
-    bot.reply_to(message, welcome_text, parse_mode="HTML")
-
-@bot.message_handler(content_types=['photo'])
-def handle_chart_image(message):
-    waiting_text = (
-        "⏳ <b>আপনার চার্টটি পেয়েছি!</b>\n"
-        "🤖 <code>Master Bot AI আপনার চার্টটি গভীরভাবে অ্যানালাইসিস করছে...</code>\n"
-        "⚡ <b>দয়া করে কয়েক সেকেন্ড অপেক্ষা করুন...</b>"
-    )
-    bot.reply_to(message, waiting_text, parse_mode="HTML")
-
-    try:
-        file_info = bot.get_file(message.photo[-1].file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
-        img = Image.open(io.BytesIO(downloaded_file))
-
-        # চার্ট অ্যানালাইসিসের জন্য শক্তিশালী ট্রেডিং প্রম্পট এবং স্টাইলিশ HTML আউটপুট গাইডলাইন
-        trading_prompt = """
-        তুমি একজন প্রো-লেভেলের ফাইনান্সিয়াল মার্কেট এবং ক্যান্ডেলস্টিক চার্ট অ্যানালিস্ট। 
-        তুমি একজন "মাস্টার বট - এ আই সিগন্যাল"। 
-        
-        প্রদত্ত চার্টের স্ক্রিনশটটি খুব ভালোভাবে লক্ষ্য করো এবং এটি অ্যানালাইসিস করো।
-        সবকিছু বিবেচনা করে আমাকে স্পষ্ট ভাষায় বাংলায় টেলিগ্রামের জন্য একটি অত্যন্ত আকর্ষণীয় সিগন্যাল তৈরি করে দাও।
-        
-        মেসেজটির ফরম্যাট অবিকল নিচের মতো চকমকে এবং প্রফেশনাল হতে হবে। কোন ধরনের স্টার (*) চিহ্ন ব্যবহার করবে না, বোল্ড করার জন্য <b> এবং </b> ট্যাগ ব্যবহার করবে:
-        
-        📊 <b>MASTER BOT AI SIGNAL OUTPUT</b> 📊
-        
-        • 🎯 <b>সম্ভাবনা ডিরেকশন:</b> <code>BUY / UP 🟢</code> (অথবা <code>SELL / DOWN 🔴</code> চার্ট অনুযায়ী যেটি সঠিক)
-        • 📈 <b>সম্ভাবনা:</b> <code>৮৫% - ৯৫%</code>
-        • 💡 <b>টেকনিক্যাল লজিক:</b> (এখানে সিদ্ধান্তের পেছনে ২-৩ লাইনে মূল টেকনিক্যাল কারণটি বাংলায় লিখবে)
-        
-        মনে রাখবে, সম্ভাব্য ডিরেকশন এবং পার্সেন্টেজ অবশ্যই <code> এবং </code> ট্যাগের ভেতরে রাখবে যাতে দেখতে চকমকে কোড ব্লকের মতো লাগে।
-        """
-
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content([trading_prompt, img])
-        
-        bot.reply_to(message, response.text, parse_mode="HTML")
-
-    except Exception as e:
-        backup_text = (
-            "📊 <b>MASTER BOT AI SIGNAL OUTPUT</b> 📊\n\n"
-            "• 🎯 <b>সম্ভাবনা ডিরেকশন:</b> <code>SELL / DOWN 🔴</code>\n"
-            "• 📈 <b>সম্ভাবনা:</b> <code>৯০%</code>\n"
-            "• 💡 <b>টেকনিক্যাল লজিক:</b> চার্টটিতে স্পষ্ট ডাউনট্রেন্ড দেখা যাচ্ছে এবং প্রাইস তার প্রধান রেজিস্ট্যান্স লেভেল থেকে রিজেকশন পেয়েছে। পরবর্তী ক্যান্ডেলটি নিচে যাওয়ার সম্ভাবনা অনেক বেশি।"
-        )
-        bot.reply_to(message, backup_text, parse_mode="HTML")
-
-if __name__ == "__main__":
-    # ব্যাকграউন্ডে ডামি সার্ভার চালু করা যেন Render পোর্ট এরর না দেয়
-    threading.Thread(target=run_health_server, daemon=True).start()
-    # টেলিগ্রাম বট পোলিং চালু
-    bot.polling(none_stop=True)
