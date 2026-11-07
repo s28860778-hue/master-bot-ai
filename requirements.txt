@@ -1,6 +1,7 @@
+
 pyTelegramBotAPI
-telebot
 google-generativeai
-Pillow
+Flask
+requests
 
 
