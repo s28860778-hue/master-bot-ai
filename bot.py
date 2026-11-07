@@ -39,7 +39,7 @@ def send_welcome(message):
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
-# ৩. 이미지/চার্ট স্ক্রিনশট প্রসেসিং হ্যান্ডলার
+# ৩. ইমেজ/চার্ট স্ক্রিনশট প্রসেসিং হ্যান্ডলার
 @bot.message_handler(content_types=['photo'])
 def handle_chart_image(message):
     try:
@@ -54,8 +54,11 @@ def handle_chart_image(message):
         file_info = bot.get_file(message.photo[-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         
-        # ছবিটিকে এআই মডেলে পাঠানোর জন্য ফরম্যাট করা
-        image_data = [{"mime_type": "image/jpeg", "data": downloaded_file}]
+        # ছবিটিকে Gemini AI-এর নতুন ফরম্যাট অনুযায়ী নিখুঁতভাবে তৈরি করা (Fixed)
+        image_data = {
+            "mime_type": "image/jpeg", 
+            "data": downloaded_file
+        }
         
         # অত্যন্ত শক্তিশালী, প্রাতিষ্ঠানিক মানের আল্ট্রা-ট্রেডিং প্রম্পট লজিক (দ্বিগুণ নির্ভুল)
         system_prompt = (
@@ -75,32 +78,38 @@ def handle_chart_image(message):
             "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide a deeply technical 2-sentence explanation in Bengali detailing candle rejection, trend confirmation, or level interaction that solidifies this signal]"
         )
         
-        # Gemini AI থেকে রেসপন্স জেনারেট করা (Nested List এরর ফিক্স করা হয়েছে)
-        response = model.generate_content([system_prompt, image_data[0]])
+        # Gemini AI থেকে রেসপন্স জেনারেট করা (Fixed Format)
+        response = model.generate_content([system_prompt, image_data])
         
         # আগের প্রসেসিং মেসেজটি ডিলিট করে মূল ফলাফল পাঠানো
         bot.delete_message(message.chat.id, processing_msg.message_id)
         bot.reply_to(message, response.text, parse_mode='Markdown')
         
     except Exception as e:
-        bot.reply_to(message, "❌ কারিগরি ত্রুটি! চার্টটি নিখুঁতভাবে স্ক্যান করা যায়নি। অনুগ্রহ করে একটি পরিষ্কার এবং হাই-কোয়ালিটি স্ক্রিনশট পুনরায় পাঠান।")
+        # কোনো সমস্যা হলে মূল কারণটি টেলিগ্রামেই প্রিন্ট করবে যাতে সহজে ধরা যায়
+        bot.reply_to(message, f"❌ কারিগরি ত্রুটি! চার্টটি নিখুঁতভাবে স্ক্যান করা যায়নি।\nError Details: {str(e)}")
         print(f"Error handling image: {e}")
 
-# ৪. Render-এ ২৪/৭ সচল রাখার জন্য Webhook সেটআপ
-@app.route('/' + BOT_TOKEN, methods=['POST'])
+# ৪. Render-এ ২৪/৭ সচল রাখার জন্য Webhook সেটআপ (১০০% Fixed পাথ)
+@app.route('/webhook', methods=['POST'])
 def getMessage():
-    json_string = request.get_data().decode('utf-8')
-    update = telebot.types.Update.de_json(json_string)
-    bot.process_new_updates([update])
-    return "!", 200
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return "!", 200
+    else:
+        return "Invalid Content-Type", 400
 
 @app.route("/")
 def webhook():
     bot.remove_webhook()
-    # এখানে স্ল্যাশ সংক্রান্ত সকল সমস্যা ১০০% সমাধান করে দেওয়া হলো
-    clean_url = RENDER_URL.rstrip('/') + '/' + BOT_TOKEN
+    # স্ল্যাশ ও পাথের ঝামেলা চিরতরে দূর করার জন্য সরাসরি সুনির্দিষ্ট URL সেটআপ
+    base_url = RENDER_URL.strip().rstrip('/')
+    clean_url = f"{base_url}/webhook"
+    
     bot.set_webhook(url=clean_url)
-    return "Master Bot AI Pro v2.0 is Up and Running!", 200
+    return f"🟢 Master Bot AI Pro v2.0 is Up and Running!<br>Webhook successfully pointed to: {clean_url}", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
