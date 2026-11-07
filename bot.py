@@ -1,4 +1,3 @@
-
 import os
 import telebot
 from flask import Flask, request
@@ -32,7 +31,7 @@ app = Flask(__name__)
 def send_welcome(message):
     welcome_text = (
         "🤖 **MASTER BOT AI v2.0 (PRO-UPGRADED)** 📊\n\n"
-        "আমি এখন আগের চেয়ে **দ্বিগুণ শক্তিশালী এবং প্রাতিষ্ঠানিক মানের এআই অ্যানালিটিক্স** প্রযুক্তিতে চালিত!\n\n"
+        "আমি এখন আগের চেয়ে **দ্বিগুণ শক্তিশালী এবং প্রাতিষ্ঠানিক মানের এআই এনালাইটিক্স** প্রযুক্তিতে চালিত!\n\n"
         "আপনার যেকোনো ট্রেডিং চার্টের (IQ Option, Pocket Option, Forex, Crypto) পরিষ্কার স্ক্রিনশট পাঠান। "
         "আমি ক্যান্ডেলস্টিক সাইকোলজি, এসএনআর লেভেল এবং প্রাতিষ্ঠানিক লজিক বিশ্লেষণ করে "
         "আপনাকে সর্বোচ্চ নিখুঁত **BUY/UP** বা **SELL/DOWN** সিগন্যাল প্রদান করব।"
@@ -54,7 +53,7 @@ def handle_chart_image(message):
         file_info = bot.get_file(message.photo[-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         
-        # ছবিটিকে এআই মদেশের পাঠানোর জন্য ফরম্যাট করা
+        # ছবিটিকে এআই মডেলে পাঠানোর জন্য ফরম্যাট করা
         image_data = [{"mime_type": "image/jpeg", "data": downloaded_file}]
         
         # অত্যন্ত শক্তিশালী, প্রাতিষ্ঠানিক মানের আল্ট্রা-ট্রেডিং প্রম্পট লজিক (দ্বিগুণ নির্ভুল)
@@ -69,7 +68,7 @@ def handle_chart_image(message):
             "5. Unbiased Execution: You MUST execute a dynamic binary decision. If prices bounce off major support or show heavy bullish rejection, output 'BUY/UP'. If prices reject major resistance, show bearish engulfing, or break below support, output 'SELL/DOWN'. Never hardcode or prefer one direction over another.\n\n"
             "Respond ONLY in Bengali using this precise, bold, professional markdown template:\n\n"
             "📈 **মার্কেট স্ট্রাকচার:** [Trend Direction / Volatility State]\n"
-            "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিमांड (সাপোর্ট): [Price] | সাপ্লাই (রেজিস্ট্যান্স): [Price]\n"
+            "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিমান্ড (সাপোর্ট): [Price] | সাপ্লাই (রেজিস্ট্যান্স): [Price]\n"
             "⚡ **মাস্টার সিগন্যাল:** [Strictly output either BUY/UP or SELL/DOWN] (উইন রেট সম্ভাবনা: [Probability]%)\n"
             "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** এন্ট্রি পয়েন্ট: [Price] | টেক প্রফিট (TP): [Price] | স্টপ লস (SL): [Price]\n"
             "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide a deeply technical 2-sentence explanation in Bengali detailing candle rejection, trend confirmation, or level interaction that solidifies this signal]"
@@ -103,4 +102,5 @@ def webhook():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
 
