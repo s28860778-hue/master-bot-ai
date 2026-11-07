@@ -1,5 +1,3 @@
-
-
 import os
 import telebot
 from flask import Flask, request
