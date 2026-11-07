@@ -1,4 +1,3 @@
-
 import os
 import telebot
 from flask import Flask, request
@@ -104,7 +103,6 @@ def getMessage():
 @app.route("/")
 def webhook():
     bot.remove_webhook()
-    # স্ল্যাশ ও পাথের ঝামেলা চিরতরে দূর করার জন্য সরাসরি সুনির্দিষ্ট URL সেটআপ
     base_url = RENDER_URL.strip().rstrip('/')
     clean_url = f"{base_url}/webhook"
     
@@ -113,5 +111,6 @@ def webhook():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
 
 
