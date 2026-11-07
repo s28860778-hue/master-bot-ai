@@ -15,7 +15,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # দ্বিগুণ শক্তিশালী পারফরম্যান্সের জন্য প্রো-কনফিগারেশন সেটআপ
 generation_config = {
-    "temperature": 0.2,  # ক্রিয়েটিভিটি কমিয়ে ১০০% লজিক্যাল এবং নিখুঁত ট্রেডিং ডেটা নিশ্চিত করার জন্য
+    "temperature": 0.2,  # ক্রিয়েটিভিটি কমিয়ে ১০০% লজিক্যাল এবং নিখুঁত ট্রেডিং ডেটা নিশ্চিত করার জন্য
     "top_p": 0.95,
     "max_output_tokens": 1000,
 }
@@ -39,7 +39,7 @@ def send_welcome(message):
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
-# ৩. ইমেজ/চার্ট স্ক্রিনশট প্রসেসিং হ্যান্ডলার
+# ৩. 이미지/চার্ট স্ক্রিনশট প্রসেসিং হ্যান্ডলার
 @bot.message_handler(content_types=['photo'])
 def handle_chart_image(message):
     try:
@@ -75,8 +75,8 @@ def handle_chart_image(message):
             "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide a deeply technical 2-sentence explanation in Bengali detailing candle rejection, trend confirmation, or level interaction that solidifies this signal]"
         )
         
-        # Gemini AI থেকে রেসপন্স জেনারেট করা
-        response = model.generate_content([system_prompt, image_data])
+        # Gemini AI থেকে রেসপন্স জেনারেট করা (Nested List এরর ফিক্স করা হয়েছে)
+        response = model.generate_content([system_prompt, image_data[0]])
         
         # আগের প্রসেসিং মেসেজটি ডিলিট করে মূল ফলাফল পাঠানো
         bot.delete_message(message.chat.id, processing_msg.message_id)
@@ -97,8 +97,9 @@ def getMessage():
 @app.route("/")
 def webhook():
     bot.remove_webhook()
-    base_url = RENDER_URL if RENDER_URL.endswith('/') else RENDER_URL + '/'
-    bot.set_webhook(url=base_url + BOT_TOKEN)
+    # এখানে স্ল্যাশ সংক্রান্ত সকল সমস্যা ১০০% সমাধান করে দেওয়া হলো
+    clean_url = RENDER_URL.rstrip('/') + '/' + BOT_TOKEN
+    bot.set_webhook(url=clean_url)
     return "Master Bot AI Pro v2.0 is Up and Running!", 200
 
 if __name__ == "__main__":
