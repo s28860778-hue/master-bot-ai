@@ -6,7 +6,7 @@ import google.generativeai as genai
 # ১. সরাসরি টোকেন ও এপিআই কি কনফিগারেশন (১০০% নিখুঁত কানেকশন)
 BOT_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
 GEMINI_API_KEY = "AQ.Ab8RN6I3LxRbfq_f7aKNVoR7O9Vnd92i3_pW_Lj_-emdP9rktg"
-RENDER_URL = "https://onrender.com"
+RENDER_URL = "https://master-bot-ai.onrender.com"
 
 # বটের প্রয়োজনীয় অন্য সব কোড নিচে সফলভাবে রান হবে...
 # (এই কোডটি সরাসরি গিটহাবে পেস্ট করার জন্য সম্পূর্ণ প্রস্তুত)
