@@ -4,7 +4,7 @@ from flask import Flask, request
 import google.generativeai as genai
 
 # ১. সরাসরি টোকেন ও এপিআই কি কনফিগারেশন (১০০% নিখুঁত কানেকশন)
-BOT_TOKEN = "7873461295:AAEl8Y8gWJdI2M9Jc5NqR0G6Lz4V2P9M4k8"
+BOT_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
 GEMINI_API_KEY = "AQ.Ab8RN6l3LXrbfq_f7aKNVoR7O9Vnd92iF_yE36w"
 RENDER_URL = "https://master-bot-ai.onrender.com"
 
@@ -69,7 +69,7 @@ def handle_chart_image(message):
             "📈 **মার্কেট স্ট্রাকচার:** [Trend Direction / Volatility State]\n"
             "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিমান্ড (সাপোর্ট): [Price] | সাপ্লাই (রেজিস্ট্যান্স): [Price]\n"
             "⚡ **মাস্টার সিগন্যাল:** [Strictly output either BUY/UP or SELL/DOWN] (উইন রেট সম্ভাবনা: [Probability]%)\n"
-            "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** এন্ট্রি পয়েন্ট: [Price] | টেক প্রফিট (TP): [Price] | স্টপ লস (SL): [Price]\n"
+            "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** એન્ટ્રી পয়েন্ট: [Price] | টেক প্রফিট (TP): [Price] | স্টপ লস (SL): [Price]\n"
             "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide a deeply technical 2-sentence explanation in Bengali detailing candle rejection, trend confirmation, or level interaction that solidifies this signal]"
         )
         
@@ -103,6 +103,7 @@ def webhook():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
 
 
 
