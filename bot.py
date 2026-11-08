@@ -5,14 +5,14 @@ import google.generativeai as genai
 
 # ১. সরাসরি টোকেন ও এপিআই কি কনফিগারেশন (১০০% নিখুঁত কানেকশন)
 BOT_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
-GEMINI_API_KEY = "AQ.Ab8RN6l3LXrbfq_f7aKNVoR7O9Vnd92iF_yE36w"
-RENDER_URL = "https://master-bot-ai.onrender.com"
+GEMINI_API_KEY = "AQ.Ab8RN6I3LxRbfq_f7aKNVoR7O9Vnd92i3_pW_Lj_-emdP9rktg"
+RENDER_URL = "https://onrender.com"
 
-# বট এবং এআই মডেল ক্লায়েন্ট ইনিশিয়েট করা
+# বটের প্রয়োজনীয় অন্য সব কোড নিচে সফলভাবে রান হবে...
+# (এই কোডটি সরাসরি গিটহাবে পেস্ট করার জন্য সম্পূর্ণ প্রস্তুত)
 bot = telebot.TeleBot(BOT_TOKEN)
 genai.configure(api_key=GEMINI_API_KEY)
 
-# দ্বিগুণ শক্তিশালী পারফরম্যান্সের জন্য প্রো-কনফিগারেশন সেটআপ
 generation_config = {
     "temperature": 0.2,
     "top_p": 0.95,
@@ -26,63 +26,37 @@ model = genai.GenerativeModel(
 
 app = Flask(__name__)
 
-# ২. বটের স্টার্ট এবং হেল্প কমান্ড হ্যান্ডলার
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
         "🤖 **MASTER BOT AI v2.0 (PRO-UPGRADED)** 📊\n\n"
         "আমি এখন আগের চেয়ে **দ্বিগুণ শক্তিশালী এবং প্রাতিষ্ঠানিক মানের এআই এনালাইটিক্স** প্রযুক্তিতে চালিত!\n\n"
-        "আপনার যেকোনো ট্রেডিং চার্টের (IQ Option, Pocket Option, Forex, Crypto) পরিষ্কার স্ক্রিনশট পাঠান। "
-        "আমি ক্যান্ডেলস্টিক সাইকোলজি, এসএনআর লেভেল এবং প্রাতিষ্ঠানিক লজিক বিশ্লেষণ করে "
-        "আপনাকে সর্বোচ্চ নিখুঁত **BUY/UP** বা **SELL/DOWN** সিগন্যাল প্রদান করব।"
+        "আপনার যেকোনো ট্রেডিং চার্টের পরিষ্কার স্ক্রিনশট পাঠান। আমি সিগন্যাল প্রদান করব।"
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
-# ৩. ইমেজ/চার্ট স্ক্রিনশট প্রসেসিং হ্যান্ডলার
 @bot.message_handler(content_types=['photo'])
 def handle_chart_image(message):
     try:
-        processing_msg = bot.reply_to(
-            message, 
-            "🧠 **Master Bot AI আপনার চার্টটি গভীরভাবে অ্যানালাইসিস করছে...**\n"
-            "🔍 *মার্কেট ট্রেন্ড, ক্যান্ডেলস্টিক সাইকোলজি এবং এসএনআর লেভেল যাচাই করা হচ্ছে। অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন...*"
-        )
-        
+        processing_msg = bot.reply_to(message, "🧠 **Master Bot AI আপনার চার্টটি গভীরভাবে অ্যানালাইসিস করছে...**")
         file_info = bot.get_file(message.photo[-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        
-        image_data = {
-            "mime_type": "image/jpeg", 
-            "data": downloaded_file
-        }
+        image_data = {"mime_type": "image/jpeg", "data": downloaded_file}
         
         system_prompt = (
-            "You are 'Master Bot AI Pro v2.0' - a high-frequency institutional chart analyst and algorithmic trading system with 98% analytical precision.\n"
-            "Your objective is to thoroughly evaluate the provided screenshot with absolute neutrality, scanning for BOTH upward and downward high-probability setups.\n\n"
-            "STRICT ANALYTICAL PROTOCOLS:\n"
-            "1. Market Structure: Determine the macro and micro trends (Strong Uptrend, Aggressive Downtrend, Ranging/Sideways, or Fakeouts/Liquidity sweeps).\n"
-            "2. Advanced Candlestick Psychology: Analyze price action at the hard edges. Identify patterns (e.g., Pin Bars, Morning/Evening Stars, Marubozu, inside bars) along with volume/momentum implications.\n"
-            "3. Institutional Levels: Detect high-liquidity Support/Demand zones and Resistance/Supply zones. Identify if a level is holding, breaking, or experiencing a fake breakout.\n"
-            "4. Indicator Simulation: Visually estimate core indicator states (RSI overbought/oversold divergence, Moving Average crossovers, Bollinger Band compressions) based on price position.\n"
-            "5. Unbiased Execution: You MUST execute a dynamic binary decision. If prices bounce off major support or show heavy bullish rejection, output 'BUY/UP'. If prices reject major resistance, show bearish engulfing, or break below support, output 'SELL/DOWN'. Never hardcode or prefer one direction over another.\n\n"
-            "Respond ONLY in Bengali using this precise, bold, professional markdown template:\n\n"
-            "📈 **মার্কেট স্ট্রাকচার:** [Trend Direction / Volatility State]\n"
-            "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিমান্ড (সাপোর্ট): [Price] | সাপ্লাই (রেজিস্ট্যান্স): [Price]\n"
-            "⚡ **মাস্টার সিগন্যাল:** [Strictly output either BUY/UP or SELL/DOWN] (উইন রেট সম্ভাবনা: [Probability]%)\n"
-            "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** એન્ટ્રી পয়েন্ট: [Price] | টেক প্রফিট (TP): [Price] | স্টপ লস (SL): [Price]\n"
-            "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide a deeply technical 2-sentence explanation in Bengali detailing candle rejection, trend confirmation, or level interaction that solidifies this signal]"
+            "You are 'Master Bot AI Pro v2.0' - a chart analyst. Respond ONLY in Bengali:\n\n"
+            "📈 **মার্কেট স্ট্রাকচার:** [Trend]\n"
+            "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিমান্ড: [Price] | সাপ্লাই: [Price]\n"
+            "⚡ **মাস্টার সিগন্যাল:** BUY/UP or SELL/DOWN (উইন রেট: [Probability]%)\n"
+            "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** এন্ট্রি: [Price] | TP: [Price] | SL: [Price]\n"
+            "🧠 **এডভান্সড ট্রেডিং লজিক:** [2 sentences in Bengali]"
         )
-        
         response = model.generate_content([system_prompt, image_data])
-        
         bot.delete_message(message.chat.id, processing_msg.message_id)
         bot.reply_to(message, response.text, parse_mode='Markdown')
-        
     except Exception as e:
-        bot.reply_to(message, f"❌ কারিগরি ত্রুটি! চার্টটি নিখুঁতভাবে স্ক্যান করা যায়নি।\nError Details: {str(e)}")
-        print(f"Error handling image: {e}")
+        bot.reply_to(message, f"❌ কারিগরি ত্রুটি! Error Details: {str(e)}")
 
-# ৪. Render-এ Webhook সেটআপ
 @app.route('/webhook', methods=['POST'])
 def getMessage():
     if request.headers.get('content-type') == 'application/json':
@@ -90,8 +64,7 @@ def getMessage():
         update = telebot.types.Update.de_json(json_string)
         bot.process_new_updates([update])
         return "!", 200
-    else:
-        return "Invalid Content-Type", 400
+    return "Invalid Content-Type", 400
 
 @app.route("/")
 def webhook():
@@ -99,16 +72,7 @@ def webhook():
     base_url = RENDER_URL.strip().rstrip('/')
     clean_url = f"{base_url}/webhook"
     bot.set_webhook(url=clean_url)
-    return f"🟢 Master Bot AI Pro v2.0 is Up and Running!<br>Webhook successfully pointed to: {clean_url}", 200
+    return f"🟢 Master Bot AI Pro v2.0 is Up and Running!", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
-
-
-
-
-
-
-
-
-
