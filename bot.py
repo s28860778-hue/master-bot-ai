@@ -3,8 +3,9 @@ import os
 import telebot
 from flask import Flask, request
 from google import genai
+from google.genai import types
 
-# ১. কনফিগারেশন (নতুন টোকেন ও এপিআই কি সহ সম্পূর্ণ আপডেট করা)
+# ১. কনফিগারেশন
 BOT_TOKEN = "9063727678:AAG5asihyYfdcH-BxmKzQVzC5fiScXaZ16Q"
 GEMINI_API_KEY = "AQ.Ab8RN6JkZ3d9KKIqTIG0f4vlqJhdDtRU1jhzPniSLHsmz_lOMw"
 RENDER_URL = "https://onrender.com"
@@ -29,10 +30,15 @@ def handle_chart_image(message):
     try:
         processing_msg = bot.reply_to(message, "⏳ **Master Bot AI আপনার চার্টটি গভীরভাবে অ্যানালাইসিস করছে...**")
         
+        # ছবি ডাউনলোড
         file_info = bot.get_file(message.photo[-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         
-        image_data = {"mime_type": "image/jpeg", "data": downloaded_file}
+        # জেমিনির নতুন নিয়ম অনুযায়ী ইমেজ বাইটস তৈরি
+        image_part = types.Part.from_bytes(
+            data=downloaded_file,
+            mime_type="image/jpeg",
+        )
         
         system_prompt = (
             "You are 'Master Bot AI Pro v2.0' - a chart analyst. Respond ONLY in Bengali:\n\n"
@@ -43,10 +49,10 @@ def handle_chart_image(message):
             "🧠 **এডভান্সড ট্রেডিং লজিক:** [Provide 2 detailed sentences in Bengali explaining the chart movement]"
         )
         
-        # গুগলের নতুন SDK দিয়ে ইমেজ প্রসেসিং
+        # জেমিনি দিয়ে রেসপন্স তৈরি
         response = client.models.generate_content(
             model=model_id,
-            contents=[system_prompt, image_data]
+            contents=[system_prompt, image_part]
         )
         
         bot.delete_message(message.chat.id, processing_msg.message_id)
