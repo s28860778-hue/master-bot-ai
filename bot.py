@@ -5,8 +5,8 @@ import google.generativeai as genai
 
 # ১. সরাসরি টোকেন ও এপিআই কি কনফিগারেশন (১০০% নিখুঁত কানেকশন)
 BOT_TOKEN = "7873461295:AAEl8Y8gWJdI2M9Jc5NqR0G6Lz4V2P9M4k8"
-GEMINI_API_KEY = "আপনার_আসল_জেমিনি_এপিআই_কি_এখানে_বসাবেন"
-RENDER_URL = "https://onrender.com"
+GEMINI_API_KEY = "AQ.Ab8RN6l3LXrbfq_f7aKNVoR7O9Vnd92iF_yE36w"
+RENDER_URL = "https://master-bot-ai.onrender.com"
 
 # বট এবং এআই মডেল ক্লায়েন্ট ইনিশিয়েট করা
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -66,7 +66,7 @@ def handle_chart_image(message):
             "4. Indicator Simulation: Visually estimate core indicator states (RSI overbought/oversold divergence, Moving Average crossovers, Bollinger Band compressions) based on price position.\n"
             "5. Unbiased Execution: You MUST execute a dynamic binary decision. If prices bounce off major support or show heavy bullish rejection, output 'BUY/UP'. If prices reject major resistance, show bearish engulfing, or break below support, output 'SELL/DOWN'. Never hardcode or prefer one direction over another.\n\n"
             "Respond ONLY in Bengali using this precise, bold, professional markdown template:\n\n"
-            "📈 **মার্কেট স্ট্রাক্ষার:** [Trend Direction / Volatility State]\n"
+            "📈 **মার্কেট স্ট্রাকচার:** [Trend Direction / Volatility State]\n"
             "🎯 **প্রাতিষ্ঠানিক এসএনআর জোন:** ডিমান্ড (সাপোর্ট): [Price] | সাপ্লাই (রেজিস্ট্যান্স): [Price]\n"
             "⚡ **মাস্টার সিগন্যাল:** [Strictly output either BUY/UP or SELL/DOWN] (উইন রেট সম্ভাবনা: [Probability]%)\n"
             "🛡️ **স্মার্ট রিস্ক ম্যানেজমেন্ট:** এন্ট্রি পয়েন্ট: [Price] | টেক প্রফিট (TP): [Price] | স্টপ লস (SL): [Price]\n"
@@ -103,6 +103,10 @@ def webhook():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+
+
+
+
 
 
 
