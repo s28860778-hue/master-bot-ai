@@ -6,7 +6,7 @@ from google import genai
 from google.genai import types
 
 # ১. আপনার সরবরাহকৃত সঠিক টোকেন এবং জেমিনির আসল চাবি কাঠি
-BOT_TOKEN = '9063727678:AAG5asihyYfdcH-BxmKzQVzC5fiScXaZ16Q'
+BOT_TOKEN = '9063727678:AAG9EPcroRud0EwnsDMivPuKoCB4opmX8zM'
 GEMINI_API_KEY = 'AQ.Ab8RN6JtHwO4tIwEVkslAc_kC-pSFjfYtSFI06ySUBBNo9RssA'
 
 # বট এবং জেমিনি এআই ক্লায়েন্ট সেটআপ
