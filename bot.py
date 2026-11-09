@@ -7,7 +7,8 @@ from google.genai import types
 
 # ১. আপনার সরবরাহকৃত সঠিক টোকেন এবং জেমিনির আসল চাবি কাঠি
 BOT_TOKEN = '9063727678:AAG9EPcroRud0EwnsDMivPuKoCB4opmX8zM'
-GEMINI_API_KEY = 'AQ.Ab8RN6JtHwO4tIwEVkslAc_kC-pSFjfYtSFI06ySUBBNo9RssA'
+GEMINI_API_KEY = 'AQ.Ab8RN6IVSlqLSYIQIVApV-Ew1chny12NusnNza8L7swoy-iUcQ'
+
 
 # বট এবং জেমিনি এআই ক্লায়েন্ট সেটআপ
 bot = telebot.TeleBot(BOT_TOKEN)
