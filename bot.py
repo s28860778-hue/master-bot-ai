@@ -6,8 +6,8 @@ import google.generativeai as genai
 API_KEY = "AIzaSy" + "DummyKeyForPublicEndpointAccess"
 genai.configure(api_key=API_KEY)
 
-TELEGRAM_TOKEN = "9063727678:AAH5f6ivj7MXs-fdiAZjXg1n4LEKixYrTRc"
-bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+TELEGRAM_TOKEN = "9063727678:AAG9EPcroRud0EwnsDMivPUKoCB4opmX8zM"
 
 print("🤖 MASTER BOT AI IS RUNNING...")
 
