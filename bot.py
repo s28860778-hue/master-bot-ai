@@ -1,14 +1,11 @@
-
 import io
 import os
 import telebot
 from google import genai
 from google.genai import types
 
-# ১. আপনার সরবরাহকৃত সঠিক টোকেন এবং জেমিনির আসল চাবি কাঠি
-BOT_TOKEN = '9063727678:AAG9EPcroRud0EwnsDMivPuKoCB4opmX8zM'
-GEMINI_API_KEY = 'AQ.Ab8RN6IVSlqLSYIQIVApV-Ew1chny12NusnNza8L7swoy-iUcQ'
-
+# ১. আপনার সরবরাহকৃত সঠিক টেলিগ্রাম টোকেন
+BOT_TOKEN = '9063727678:AAG9EPcRoRud0EwnsDMivPUkoCB4opmX8zM'
 
 # বট এবং জেমিনি এআই ক্লায়েন্ট সেটআপ
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -24,14 +21,13 @@ PROMPT = (
     "Keep the language professional, encouraging, and easy to understand in Bengali."
 )
 
-
-# /start এবং /help কমান্ড হ্যান্ডলার
+# /start এবং /help কমান্ড হ্যান্ডলার (কোনো চ্যানেল জয়েন করার ঝামেলা ছাড়া ফ্রেশ কোড)
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
-        "👋 হ্যালো! আমি আপনার **AI বাংলা স্ক্যানার** বট।\n\n"
+        "👋 হ্যালো! আমি আপনার **AI বাংলা HTML স্ক্যানার** বট।\n\n"
         "📈 মার্কেটের যেকোনো চার্ট বা স্ক্রিনশট আমাকে এখানে পাঠান। "
-        "আমি সেটি নিখুঁতভাবে স্ক্যান করে আপনাকে বাংলায় সম্পূর্ণ অ্যানালিসিস বুঝিয়ে দেব।"
+        "আমি সেটি নিখুঁতভাবে স্ক্যান করে আপনাকে বাংলায় সম্পূর্ণ টেকনিক্যাল অ্যানালিসিস বুঝিয়ে দেব।"
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
@@ -65,6 +61,7 @@ def handle_market_screenshot(message):
             text=f"📊 **মার্কেট অ্যানালিসিস রেজাল্ট:**\n\n{response.text}",
             parse_mode='Markdown'
         )
+
     except Exception as e:
         # কোনো কারণে এরর আসলে তা সুন্দরভাবে হ্যান্ডেল করা
         bot.reply_to(message, f"❌ দুঃখিত বন্ধু, চাটটি প্রসেস করার সময় একটি সমস্যা হয়েছে। এরর: {str(e)}")
