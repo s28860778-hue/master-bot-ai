@@ -12,7 +12,7 @@ GEMINI_API_KEY = 'AQ.Ab8RN6IVSlqLSYIQIVApV-Ew1chny12NusnNza8L7swoy-iUcQ'
 
 # বট এবং জেমিনি এআই ক্লায়েন্ট সেটআপ
 bot = telebot.TeleBot(BOT_TOKEN)
-ai_client = genai.Client(http_options={'headers': {'x-goog-api-key': GEMINI_API_KEY}}
+ai_client = genai.Client(http_options={'headers': {'x-goog-api-key': GEMINI_API_KEY}})
 
 # চার্ট অ্যানালিসিসের জন্য শক্তিশালী প্রম্পট
 PROMPT = (
