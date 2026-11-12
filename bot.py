@@ -1,38 +1,83 @@
-import io
 import telebot
-from PIL import Image
 import google.generativeai as genai
+from PIL import Image
+import io
 
-API_KEY = "AIzaSy" + "DummyKeyForPublicEndpointAccess"
+# তোমার আসল Gemini API Key বসানো হয়েছে
+API_KEY = "AQ.Ab8RN6KIQSRn8rm69-o2HgTZcHnV_DBUrqDmssK3T-0BQfaMiA"
 genai.configure(api_key=API_KEY)
 
+# তোমার নতুন Telegram Bot Token বসানো হয়েছে
+TELEGRAM_TOKEN = "9063727678:AAF_DWAWizkWS6Ku3-Jp21g91tdtmNY5zX0"
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-TELEGRAM_TOKEN = "9063727678:AAG9EPcroRud0EwnsDMivPUKoCB4opmX8zM"
-
-print("🤖 MASTER BOT AI IS RUNNING...")
+print("✨👑 MASTER BOT AI (ULTRA VIP SPARKLE EDITION) IS RUNNING...")
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    welcome_text = "📊 স্বাগতম! আমি 'মাস্টার বট - এ আই সিগন্যাল'।\n\nআপনার যেকোনো চার্টের স্ক্রিনশট এখানে পাঠান। আমি সেটি অ্যানালাইসিস করে পরবর্তী ক্যান্ডেল কোন দিকে যাবে (UP / DOWN) তা জানিয়ে দেব।"
-    bot.reply_to(message, welcome_text)
+    welcome_text = (
+        "✨👑 *স্বাগতম! আমি 'Master Bot AI' (Ultra VIP)* 👑✨\n"
+        "╔════════════════════╗\n"
+        "🚀 আপনার যেকোনো ট্রেডিং চার্টের পরিষ্কার স্ক্রিনশট এখানে পাঠান।\n"
+        "💎 আমি ক্যান্ডেলস্টিক প্যাটার্ন ও মার্কেট পাওয়ার গভীরভাবে স্ক্যান করে নিখুঁত সিগন্যাল দেব।\n"
+        "╚════════════════════╝"
+    )
+    bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
 @bot.message_handler(content_types=['photo'])
 def handle_chart_image(message):
-    bot.reply_to(message, "📸 আপনার চার্টটি পেয়েছি। মাস্টার বট অ্যানালাইসিস করছে, দয়া করে একটু অপেক্ষা করুন...")
+    wait_msg = (
+        "⚡✨ *চার্ট স্ক্যানিং শুরু হয়েছে...* ✨⚡\n"
+        "╔════════════════════╗\n"
+        "🔍 AI ক্যান্ডেল ও সাপোর্ট-রেজিস্ট্যান্স মাপছে...\n"
+        "⏳ দয়া করে মাত্র কয়েক সেকেন্ড অপেক্ষা করুন...\n"
+        "╚════════════════════╝"
+    )
+    bot.reply_to(message, wait_msg, parse_mode='Markdown')
+    
     try:
         file_info = bot.get_file(message.photo[-1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
         img = Image.open(io.BytesIO(downloaded_file))
         
-        trading_prompt = "তুমি একজন প্রো-লেভেলের ফাইনান্সিয়াল মার্কেট এবং ক্যান্ডেলস্টিক চার্ট অ্যানালিস্ট। তুমি একজন 'মাস্টার বট - এ আই সিগন্যাল'। প্রদত্ত চার্টের স্ক্রিনশটটি খুব ভালোভাবে লক্ষ্য করো এবং এটি অ্যানালাইসিস করো। সবকিছু বিবেচনা করে আমাকে স্পষ্ট ভাষায় বাংলায় জানাও: ১. পরবর্তী ক্যান্ডেলের সম্ভাব্য ডিরেকশন কী হবে? (BUY / UP নাকি SELL / DOWN) ২. এই সিদ্ধান্তের পেছনে তোমার মূল টেকনিক্যাল কারণ কী?"
+        trading_prompt = """
+        তুমি একজন বিশ্বের সেরা প্রো-লেভেলের ফাইনান্সিয়াল মার্কেট এবং ক্যান্ডেলস্টিক চার্ট অ্যানালিস্ট। 
+        প্রদত্ত চার্টের স্ক্রিনশটটি অত্যন্ত সূক্ষ্মভাবে পর্যবেক্ষণ করো। কোনো অনুমান বা ভুয়া তথ্য দেবে না।
         
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        অ্যানালাইসিস করার নিয়মাবলী:
+        ১. চার্টের বর্তমান ওভারঅল ট্রেন্ড এবং বায়ার-সেলারদের প্রকৃত শক্তি বিশ্লেষণ করো।
+        ২. মার্কেট যদি অতিরিক্ত অস্থির বা অস্পষ্ট হয়, তবে স্পষ্টভাবে 'HOLD / NO TRADE' পরামর্শ দাও।
+
+        সবকিছু বিশ্লেষণ করে কোনো বাড়তি কথা না লিখে শুধুমাত্র নিচের হুবহু উজ্জ্বল বক্স ফরম্যাটে বাংলায় উত্তর দাও:
+
+        ✨👑 *MASTER BOT AI • ULTRA VIP* 👑✨
+        ╔════════════════════╗
+        🌟 *সিগন্যাল:* *[BUY / CALL 🟢⚡ অথবা SELL / PUT 🔴🔥 অথবা HOLD / NO TRADE 🟡⚠️ - চার্ট অনুযায়ী সঠিকটি লেখো]*
+        💎 *অ্যাকুরেসি:* `[বাস্তবসম্মত শতাংশ লেখো, যেমন: ৯৪%]` 【[শতাংশ অনুযায়ী সবুজ বা লাল বক্স দাও, যেমন: 🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜]】
+        🔥 *মার্কেট পাওয়ার:* [চার্টের বর্তমান শক্তি লেখো, যেমন: অতি শক্তিশালী বায়ার 🚀 বা তীব্র সেলার চাপ 📉]
+        ╚════════════════════╝
+
+        🔮 *AI মার্কেট অ্যানালাইসিস:*
+        > [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনে স্পষ্ট ও নিখুঁত ব্যাখ্যা দাও]
+
+        🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
+        """
+        
+        model = genai.GenerativeModel('gemini-2.5-pro')
         response = model.generate_content([trading_prompt, img])
-        bot.reply_to(message, response.text)
+        
+        bot.reply_to(message, response.text, parse_mode='Markdown')
         
     except Exception as e:
-        error_backup = "📊 **মাস্টার বট এ আই সিগন্যাল আউটপুট** 📊\n\n• **সম্ভাব্য ডিরেকশন:** SELL / DOWN (লাল ক্যান্ডেল)\n• **লজিক:** চার্টটিতে স্পষ্ট ডাউনট্রেন্ড দেখা যাচ্ছে এবং প্রাইস তার প্রধান রেজিস্ট্যান্স লেভেল থেকে রিজেকশন পেয়েছে। পরবর্তী ক্যান্ডেলটি নিচে যাওয়ার সম্ভাবনা ৯০%।"
-        bot.reply_to(message, error_backup)
+        print("Error:", e)
+        error_msg = (
+            "⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
+            "╔════════════════════╗\n"
+            "❌ আপনার API Key বা ইন্টারনেট সংযোগে সমস্যা হচ্ছে।\n"
+            "🛡️ নিরাপত্তার স্বার্থে কোনো অনুমাননির্ভর সিগন্যাল দেওয়া হলো না।\n"
+            "╚════════════════════╝"
+        )
+        bot.reply_to(message, error_msg, parse_mode='Markdown')
 
 if __name__ == "__main__":
     bot.polling(none_stop=True)
