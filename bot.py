@@ -1,15 +1,32 @@
+import os
+import io
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import telebot
 from google import genai
 from PIL import Image
-import io
 
-# তোমার নতুন Gemini Auth API Key বসানো হয়েছে
-API_KEY = "AQ.Ab8RN6IM6DAeZFnQB7B6J8OC22s28B3YkU2x3zcBu4dsMkYWhA"
+# ১. এখানে অবশ্যই 'AIzaSy' দিয়ে শুরু হওয়া আসল API Key বসাও
+API_KEY = "এখানে_AIzaSy_দিয়ে_শুরু_হওয়া_আসল_কী_দাও"
 client = genai.Client(api_key=API_KEY)
 
-# তোমার Telegram Token বসানো আছে
+# ২. তোমার Telegram Token
 TELEGRAM_TOKEN = "9063727678:AAF_DWAWizkWS6Ku3-Jp21g91tdtmNY5zX0"
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+# Render-এর Port Timeout সমস্যা সমাধানের জন্য ছোট ওয়েব সার্ভার
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Master Bot AI is Live!")
+
+def run_web_server():
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
+    server.serve_forever()
+
+threading.Thread(target=run_web_server, daemon=True).start()
 
 print("✨👑 MASTER BOT AI (ULTRA VIP SPARKLE EDITION) IS RUNNING...")
 
@@ -63,7 +80,6 @@ def handle_chart_image(message):
         🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
         """
         
-        # নতুন Google GenAI SDK দিয়ে AQ. কী ব্যবহার করে সিগন্যাল তৈরি
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=[trading_prompt, img]
