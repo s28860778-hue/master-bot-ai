@@ -3,11 +3,11 @@ import google.generativeai as genai
 from PIL import Image
 import io
 
-# তোমার আসল Gemini API Key বসানো হয়েছে
+# তোমার সঠিক Gemini API Key (...aMiA)
 API_KEY = "AQ.Ab8RN6KIQSRn8rm69-o2HgTZcHnV_DBUrqDmssK3T-0BQfaMiA"
 genai.configure(api_key=API_KEY)
 
-# তোমার নতুন Telegram Bot Token বসানো হয়েছে
+# তোমার Telegram Token
 TELEGRAM_TOKEN = "9063727678:AAF_DWAWizkWS6Ku3-Jp21g91tdtmNY5zX0"
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
@@ -63,7 +63,8 @@ def handle_chart_image(message):
         🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
         """
         
-        model = genai.GenerativeModel('gemini-2.5-pro')
+        # ফ্রি টায়ারের জন্য উপযুক্ত শক্তিশালী মডেল
+        model = genai.GenerativeModel('gemini-2.5-flash')
         response = model.generate_content([trading_prompt, img])
         
         bot.reply_to(message, response.text, parse_mode='Markdown')
@@ -71,11 +72,8 @@ def handle_chart_image(message):
     except Exception as e:
         print("Error:", e)
         error_msg = (
-            "⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
-            "╔════════════════════╗\n"
-            "❌ আপনার API Key বা ইন্টারনেট সংযোগে সমস্যা হচ্ছে।\n"
-            "🛡️ নিরাপত্তার স্বার্থে কোনো অনুমাননির্ভর সিগন্যাল দেওয়া হলো না।\n"
-            "╚════════════════════╝"
+            f"⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
+            f"কারণ: `{str(e)}`"
         )
         bot.reply_to(message, error_msg, parse_mode='Markdown')
 
