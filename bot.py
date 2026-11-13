@@ -6,8 +6,8 @@ import telebot
 from google import genai
 from PIL import Image
 
-# ১. এখানে অবশ্যই 'AIzaSy' দিয়ে শুরু হওয়া আসল API Key বসাও
-API_KEY = "এখানে_AIzaSy_দিয়ে_শুরু_হওয়া_আসল_কী_দাও"
+# ১. তোমার আসল Gemini Auth Key (AQ. ফরম্যাট)
+API_KEY = "AQ.Ab8RN6IM6DAeZFnQB7B6J8OC22s28B3YkU2x3zcBu4dsMkYWhA"
 client = genai.Client(api_key=API_KEY)
 
 # ২. তোমার Telegram Token
@@ -80,8 +80,9 @@ def handle_chart_image(message):
         🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
         """
         
+        # AQ. কী সাপোর্ট করার জন্য লেটেস্ট মডেল ব্যবহার করা হয়েছে
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-3.6-flash',
             contents=[trading_prompt, img]
         )
         
