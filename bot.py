@@ -11,7 +11,7 @@ from PIL import Image
 API_KEY = "AQ.Ab8RN6LXI4O8pk20QnFMamJQEP0A-9-zgaT6WaxcdJCxQqXKaw"
 
 # ২. তোমার Telegram Token (@master_bot_ai_2026_bot)
-TELEGRAM_TOKEN = "9063727678:AAF_DWAWizkWS6Ku3-Jp21g91tdtmNY5zX0"
+TELEGRAM_TOKEN = "9063727678:AAG1Tj7cNmH4jUWHrfLvyfrKARmMhZIGDOg"
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
 # Render-এর Port Timeout সমস্যা সমাধানের জন্য ছোট ওয়েব সার্ভার
