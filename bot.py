@@ -10,7 +10,7 @@ from PIL import Image
 # ১. তোমার আসল Gemini Auth Key (AQ. ফরম্যাট)
 API_KEY = "AQ.Ab8RN6LXI4O8pk20QnFMamJQEP0A-9-zgaT6WaxcdJCxQqXKaw"
 
-# ২. তোমার Telegram Token (@master_bot_ai_2026_bot)
+# ২. তোমার নতুন Telegram Token (@master_bot_ai_2026_bot)
 TELEGRAM_TOKEN = "9063727678:AAG1Tj7cNmH4jUWHrfLvyfrKARmMhZIGDOg"
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
@@ -86,9 +86,12 @@ def handle_chart_image(message):
 🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
 """
 
-        # AQ. কী সাপোর্ট করার জন্য সরাসরি REST API ব্যবহার করা হয়েছে
-        url = f"https://googleapis.com{API_KEY}"
-        headers = {'Content-Type': 'application/json'}
+        # সঠিক এবং সম্পূর্ণ REST API URL
+        api_url = "https://googleapis.com"
+        headers = {
+            "Content-Type": "application/json",
+            "x-goog-api-key": API_KEY
+        }
         data = {
             "contents": [{
                 "parts": [
@@ -98,10 +101,10 @@ def handle_chart_image(message):
             }]
         }
 
-        res = requests.post(url, headers=headers, json=data, timeout=30)
+        res = requests.post(api_url, headers=headers, json=data, timeout=30)
         res_json = res.json()
 
-        if "candidates" in res_json:
+        if "candidates" in res_json and len(res_json["candidates"]) > 0:
             reply_text = res_json["candidates"][0]["content"]["parts"][0]["text"]
             bot.reply_to(message, reply_text, parse_mode='Markdown')
         else:
