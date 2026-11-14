@@ -87,7 +87,7 @@ def handle_chart_image(message):
 """
 
         # সঠিক এবং সম্পূর্ণ REST API URL
-        api_url = "https://googleapis.com"
+        api_url ="https://googleapis.com"
         
         headers = {
             "Content-Type": "application/json",
