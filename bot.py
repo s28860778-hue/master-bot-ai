@@ -8,7 +8,7 @@ import telebot
 from PIL import Image
 
 # ১. তোমার আসল Gemini Auth Key (AQ. ফরম্যাট)
-API_KEY = "AQ.Ab8RN6LXI4O8pk20QnFMamJQEP0A-9-zgaT6WaxcdJCxQqXKaw"
+API_KEY = "AQ.Ab8RN6JtHwO4tIwEVkslAc_kC-pSFjfYtSFIO6ySUBbNO9RssA"
 
 # ২. তোমার নতুন Telegram Token (@master_bot_ai_2026_bot)
 TELEGRAM_TOKEN = "9063727678:AAG1Tj7cNmH4jUWHrfLvyfrKARmMhZIGDOg"
@@ -88,7 +88,6 @@ def handle_chart_image(message):
 
         # সঠিক এবং সম্পূর্ণ REST API URL
         api_url = "https://googleapis.com"
-
         headers = {
             "Content-Type": "application/json",
             "x-goog-api-key": API_KEY
