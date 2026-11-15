@@ -86,7 +86,11 @@ def handle_chart_image(message):
 """
 
         # সঠিক এবং সম্পূর্ণ REST API URL
-        api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+        api_url = "https://" + \
+                  "generativelanguage." + \
+                  "googleapis.com" + \
+                  "/v1beta/models/" + \
+                  "gemini-3.8-flash:generateContent" 
 
         headers = {
             "Content-Type": "application/json",
