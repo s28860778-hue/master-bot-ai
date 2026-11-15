@@ -10,12 +10,11 @@ from PIL import Image
 # ১. আপনার Gemini API Key
 API_KEY = os.environ.get("GEMINI_API_KEY")
 
-
 # ২. আপনার Telegram Bot Token
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-# Render-এর Port Timeout সমস্যা সমাধানের জন্য ছোট ওয়েব সার্ভার
+# Render-এর Port Timeout সমস্যা সমাধানের জন্য ডামি ওয়েব সার্ভার
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -34,18 +33,16 @@ print("🤖 MASTER BOT AI (ULTRA VIP SPARKLE EDITION) IS RUNNING...")
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
-        "✨👑 *স্বাগতম! আমি 'Master Bot AI' (Ultra VIP)* 👑✨\n"
-        "━━━━━━━━━━━━━━━━━━━━\n"
+        "✨🌟 *স্বাগতম! আমি 'Master Bot AI' (Ultra VIP)* 🌟✨\n\n"
         "📊 আপনার যেকোনো ট্রেডিং চার্টের পরিষ্কার স্ক্রিনশট এখানে পাঠান।\n"
-        "🔍 আমি ক্যান্ডেলস্টিক প্যাটার্ন ও মার্কেট পাওয়ার গভীরভাবে স্ক্যান করে নির্ভুল বিশ্লেষণ দেব।"
+        "💎 আমি ক্যান্ডেলস্টিক প্যাটার্ন ও মার্কেট পাওয়ার গভীরভাবে স্ক্যান করে নির্ভুল বিশ্লেষণ দেব।"
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
 @bot.message_handler(content_types=['photo'])
 def handle_chart_image(message):
     wait_msg = (
-        "⚡✨ *চার্ট স্ক্যানিং শুরু হয়েছে...* ✨⚡\n"
-        "━━━━━━━━━━━━━━━━━━━━\n"
+        "⚡✨ *চার্ট স্ক্যানিং শুরু হয়েছে...* ✨⚡\n\n"
         "🔮 AI ক্যান্ডেল ও সাপোর্ট-রেজিস্ট্যান্স মাপছে...\n"
         "⏳ দয়া করে মাত্র কয়েক সেকেন্ড অপেক্ষা করুন..."
     )
@@ -73,16 +70,15 @@ def handle_chart_image(message):
 সবকিছু বিশ্লেষণ করে কোনো বাড়তি কথা না লিখে শুধুমাত্র নিচের হুবহু উজ্জ্বল ফরম্যাটে উত্তর দাও:
 
 ✨👑 *MASTER BOT AI • ULTRA VIP* 👑✨
-━━━━━━━━━━━━━━━━━━━━
-🎯 *সিগন্যাল:* *[BUY / CALL 🟢 অথবা SELL / PUT 🔴 অথবা HOLD / NO TRADE ⏸️]*
-💎 *অ্যাকুরেসি:* `[বাস্তবসম্মত শতাংশ লেখো, যেমন: ৯৪%]` `[শতাংশ অনুযায়ী বার দাও, যেমন: 🟩🟩🟩🟩⬜]`
-🔥 *মার্কেট পাওয়ার:* `[চার্টের বর্তমান শক্তি লেখো, যেমন: অতি শক্তিশালী বায়ার চাপ / শক্তিশালী সেলার চাপ]`
-━━━━━━━━━━━━━━━━━━━━
 
-🔮 *AI মার্কেট অ্যানালাইসিস:*
+🎯 *সিগন্যাল:* *[BUY / CALL 🟢 অথবা SELL / PUT 🔴 অথবা HOLD / NO TRADE ⏸️]*
+📊 *অ্যাকুরেসি:* *[বাস্তবসম্মত শতাংশ লেখো, যেমন: ৯৪%]* `[শতাংশ অনুযায়ী বার দাও, যেমন: 🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜]`
+🔥 *মার্কেট পাওয়ার:* *[চার্টের বর্তমান শক্তি লেখো, যেমন: অতি শক্তিশালী বায়ার চাপ / শক্তিশালী সেলার চাপ]*
+
+💡 *AI মার্কেট অ্যানালাইসিস:*
 > [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনের সংক্ষিপ্ত ও নিখুঁত ব্যাখ্যা লেখো]
 
-🛡️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
+⚠️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
 """
 
         # সঠিক এবং সম্পূর্ণ REST API URL
@@ -90,24 +86,25 @@ def handle_chart_image(message):
                   "generativelanguage." + \
                   "googleapis.com" + \
                   "/v1beta/models/" + \
-                  "gemini-3.8-flash:generateContent" 
+                  "gemini-3.8-flash:generateContent"
 
         headers = {
             "Content-Type": "application/json",
             "x-goog-api-key": API_KEY
-                data = {
-        "contents": [{
-            "parts": [
-                {"text": trading_prompt},
-                {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
-            ]
-        }],
-        "generationConfig": {
-            "thinkingConfig": {"thinkingBudget": 0}
         }
+        data = {
+            "contents": [{
+                "parts": [
+                    {"text": trading_prompt},
+                    {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
+                ]
+            }],
+            "generationConfig": {
+                "thinkingConfig": {"thinkingBudget": 0}
+            }
         }
-        
-        res = requests.post(api_url, headers=headers, json=data, timeout=30)
+
+        res = requests.post(api_url, headers=headers, json=data, timeout=90)
         res_json = res.json()
 
         if "candidates" in res_json and len(res_json["candidates"]) > 0:
@@ -120,7 +117,7 @@ def handle_chart_image(message):
     except Exception as e:
         print("Error:", e)
         error_msg = (
-            f"⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
+            "⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
             f"কারণ: `{str(e)}`"
         )
         bot.reply_to(message, error_msg, parse_mode='Markdown')
