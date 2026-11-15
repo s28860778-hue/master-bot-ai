@@ -57,9 +57,9 @@ def handle_chart_image(message):
 
         # দ্রুত প্রসেসিংয়ের জন্য ছবি অপ্টিমাইজ ও Base64 রূপান্তর
         img = Image.open(io.BytesIO(downloaded_file))
-        img.thumbnail((1024, 1024))
+        img.thumbnail((600, 600))
         buffered = io.BytesIO()
-        img.save(buffered, format="JPEG", quality=85)
+        img.save(buffered, format="JPEG", quality=60)
         img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
         trading_prompt = """
@@ -95,17 +95,19 @@ def handle_chart_image(message):
         headers = {
             "Content-Type": "application/json",
             "x-goog-api-key": API_KEY
+                data = {
+        "contents": [{
+            "parts": [
+                {"text": trading_prompt},
+                {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
+            ]
+        }],
+        "generationConfig": {
+            "thinkingConfig": {"thinkingBudget": 0}
         }
-        data = {
-            "contents": [{
-                "parts": [
-                    {"text": trading_prompt},
-                    {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
-                ]
-            }]
         }
-
-        res = requests.post(api_url, headers=headers, json=data, timeout=90)
+        
+        res = requests.post(api_url, headers=headers, json=data, timeout=30)
         res_json = res.json()
 
         if "candidates" in res_json and len(res_json["candidates"]) > 0:
