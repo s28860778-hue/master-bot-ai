@@ -8,7 +8,8 @@ import telebot
 from PIL import Image
 
 # ১. আপনার Gemini API Key
-API_KEY = "AQ.Ab8RN6JtHwO4tIwEVkslAc_kC-pSFjfYtSFIO6ySUBbNO9RssA"
+API_KEY = os.environ.get("GEMINI_API_KEY")
+
 
 # ২. আপনার Telegram Bot Token
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
