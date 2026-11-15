@@ -105,7 +105,7 @@ def handle_chart_image(message):
             }]
         }
 
-        res = requests.post(api_url, headers=headers, json=data, timeout=50)
+        res = requests.post(api_url, headers=headers, json=data, timeout=90)
         res_json = res.json()
 
         if "candidates" in res_json and len(res_json["candidates"]) > 0:
