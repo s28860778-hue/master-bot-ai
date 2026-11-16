@@ -98,8 +98,11 @@ def handle_chart_image(message):
 
         for model_name in models:
             try:
-                api_url = f"https://googleapis.com{model_name}:generateContent"
-                res = requests.post(api_url, headers=headers, json=data, timeout=50)
+    api_url = 
+    "/".join(["https://googleapis.com", 
+    "v1beta", "models", f"
+    {model_name}:generateContent"])
+             res = requests.post(api_url, headers=headers, json=data, timeout=50)
                 res_json = res.json()
 
                 candidates = res_json.get("candidates", [])
