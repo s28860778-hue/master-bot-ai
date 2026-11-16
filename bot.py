@@ -1,5 +1,6 @@
 import os
 import io
+import time
 import base64
 import requests
 import threading
@@ -7,14 +8,11 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import telebot
 from PIL import Image
 
-# ১. আপনার Gemini API Key
 API_KEY = os.environ.get("GEMINI_API_KEY")
-
-# ২. আপনার Telegram Bot Token
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
-# Render-এর Port Timeout সমস্যা সমাধানের জন্য ডামি ওয়েব সার্ভার
 class HealthCheckHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -28,14 +26,14 @@ def run_web_server():
 
 threading.Thread(target=run_web_server, daemon=True).start()
 
-print("🤖 MASTER BOT AI (ULTRA VIP SPARKLE EDITION) IS RUNNING...")
+print("MASTER BOT AI IS RUNNING...")
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
     welcome_text = (
-        "✨🌟 *স্বাগতম! আমি 'Master Bot AI' (Ultra VIP)* 🌟✨\n\n"
+        "✨ *স্বাগতম! আমি Master Bot AI* ✨\n\n"
         "📊 আপনার যেকোনো ট্রেডিং চার্টের পরিষ্কার স্ক্রিনশট এখানে পাঠান।\n"
-        "💎 আমি ক্যান্ডেলস্টিক প্যাটার্ন ও মার্কেট পাওয়ার গভীরভাবে স্ক্যান করে নির্ভুল বিশ্লেষণ দেব।"
+        "🔍 আমি ক্যান্ডেলস্টিক প্যাটার্ন ও সাপোর্ট-রেজিস্ট্যান্স বিশ্লেষণ করে আপনাকে সিগন্যাল দেব।"
     )
     bot.reply_to(message, welcome_text, parse_mode='Markdown')
 
@@ -44,49 +42,46 @@ def handle_chart_image(message):
     wait_msg = (
         "⚡✨ *চার্ট স্ক্যানিং শুরু হয়েছে...* ✨⚡\n\n"
         "🔮 AI ক্যান্ডেল ও সাপোর্ট-রেজিস্ট্যান্স মাপছে...\n"
-        "⏳ দয়া করে মাত্র কয়েক সেকেন্ড অপেক্ষা করুন..."
+        "⏳ দয়া করে কয়েক সেকেন্ড অপেক্ষা করুন..."
     )
     bot.reply_to(message, wait_msg, parse_mode='Markdown')
 
     try:
-        file_info = bot.get_file(message.photo[-1].file_id)
+        largest_photo = message.photo.pop()
+        file_info = bot.get_file(largest_photo.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
-        # দ্রুত প্রসেসিংয়ের জন্য ছবি অপ্টিমাইজ ও Base64 রূপান্তর
         img = Image.open(io.BytesIO(downloaded_file))
-        img.thumbnail((600, 600))
+        img.thumbnail((900, 900))
         buffered = io.BytesIO()
-        img.save(buffered, format="JPEG", quality=60)
+        img.save(buffered, format="JPEG", quality=85)
         img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
         trading_prompt = """
-তুমি একজন বিশ্বের সেরা প্রো-লেভেলের ফাইন্যান্সিয়াল মার্কেট এবং ক্যান্ডেলস্টিক চার্ট অ্যানালিস্ট।
+তুমি একজন অভিজ্ঞ প্রো-লেভেলের প্রাইস-অ্যাকশন এবং ক্যান্ডেলস্টিক চার্ট অ্যানালিস্ট।
 প্রদত্ত চার্টের স্ক্রিনশটটি অত্যন্ত সূক্ষ্মভাবে পর্যবেক্ষণ করো। কোনো অনুমান বা ভুয়া তথ্য দেবে না।
 
-অ্যানালাইসিস করার নিয়মাবলী:
+অ্যানালাইসিস করার নিয়মাবলি:
 ১. চার্টের বর্তমান ওভারঅল ট্রেন্ড এবং বায়ার-সেলারদের প্রকৃত শক্তি বিশ্লেষণ করো।
-২. মার্কেট যদি অতিরিক্ত অস্থির বা অস্পষ্ট হয়, তবে স্পষ্টভাবে 'HOLD / NO TRADE ⏸️' সাজেস্ট করো।
+২. মার্কেট যদি অতিরিক্ত অস্থির বা অস্পষ্ট হয়, তবে স্পষ্টভাবে 'HOLD / NO TRADE' সাজেস্ট করো।
 
-সবকিছু বিশ্লেষণ করে কোনো বাড়তি কথা না লিখে শুধুমাত্র নিচের হুবহু উজ্জ্বল ফরম্যাটে উত্তর দাও:
+সবকিছু বিশ্লেষণ করে কেবল মাত্র নিচের ফরম্যাটে উত্তর দাও:
 
-✨👑 *MASTER BOT AI • ULTRA VIP* 👑✨
+⚡ *MASTER BOT AI SIGNAL* ⚡
 
-🎯 *সিগন্যাল:* *[BUY / CALL 🟢 অথবা SELL / PUT 🔴 অথবা HOLD / NO TRADE ⏸️]*
-📊 *অ্যাকুরেসি:* *[বাস্তবসম্মত শতাংশ লেখো, যেমন: ৯৪%]* `[শতাংশ অনুযায়ী বার দাও, যেমন: 🟩🟩🟩🟩🟩🟩🟩🟩🟩⬜]`
-🔥 *মার্কেট পাওয়ার:* *[চার্টের বর্তমান শক্তি লেখো, যেমন: অতি শক্তিশালী বায়ার চাপ / শক্তিশালী সেলার চাপ]*
+🎯 *সিগন্যাল:* *[BUY / CALL অথবা SELL / PUT অথবা HOLD / NO TRADE]*
+📊 *অ্যাকুরেসি:* *[সম্ভাব্যতা শতাংশ লেখো, যেমন: ৮৫%]*
+⏱️ *মার্কেট টাইম:* *[চার্টের টাইমফ্রেম বুঝে লেখো, যেমন: ১-৩ মিনিট]*
 
-💡 *AI মার্কেট অ্যানালাইসিস:*
-> [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনের সংক্ষিপ্ত ও নিখুঁত ব্যাখ্যা লেখো]
+🔍 *AI চার্ট অ্যানালাইসিস:*
+> [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনের সংক্ষিপ্ত ও নির্ভুল ব্যাখ্যা লেখো]
 
-⚠️ _নিরাপদ ট্রেডিংয়ের জন্য মানি ম্যানেজমেন্ট অনুসরণ করুন।_
+⚠️ _বিঃদ্রঃ নিজস্ব ঝুঁকি ব্যবস্থাপনা (Risk Management) মেনে ট্রেড করুন।_
 """
 
-        # সঠিক এবং সম্পূর্ণ REST API URL
-        api_url = "https://" + \
-                  "generativelanguage." + \
-                  "googleapis.com" + \
-                  "/v1beta/models/" + \
-                  "gemini-3.8-flash:generateContent"
+        models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
+        reply_text = None
+        last_error = ""
 
         headers = {
             "Content-Type": "application/json",
@@ -98,28 +93,44 @@ def handle_chart_image(message):
                     {"text": trading_prompt},
                     {"inline_data": {"mime_type": "image/jpeg", "data": img_base64}}
                 ]
-            }],
-            "generationConfig": {
-                "thinkingConfig": {"thinkingBudget": 0}
-            }
+            }]
         }
 
-        res = requests.post(api_url, headers=headers, json=data, timeout=90)
-        res_json = res.json()
+        for model_name in models:
+            try:
+                api_url = f"https://googleapis.com{model_name}:generateContent"
+                res = requests.post(api_url, headers=headers, json=data, timeout=50)
+                res_json = res.json()
 
-        if "candidates" in res_json and len(res_json["candidates"]) > 0:
-            reply_text = res_json["candidates"][0]["content"]["parts"][0]["text"]
-            bot.reply_to(message, reply_text, parse_mode='Markdown')
+                candidates = res_json.get("candidates", [])
+                if len(candidates) > 0:
+                    first_candidate = candidates.pop(0)
+                    parts = first_candidate.get("content", {}).get("parts", [])
+                    if len(parts) > 0:
+                        first_part = parts.pop(0)
+                        if "text" in first_part:
+                            reply_text = first_part["text"]
+                            break
+                else:
+                    last_error = res_json.get("error", {}).get("message", str(res_json))
+                    time.sleep(1)
+            except Exception as req_err:
+                last_error = str(req_err)
+                time.sleep(1)
+
+        if reply_text:
+            try:
+                bot.reply_to(message, reply_text, parse_mode='Markdown')
+            except Exception:
+                bot.reply_to(message, reply_text)
         else:
-            error_detail = res_json.get("error", {}).get("message", str(res_json))
-            bot.reply_to(message, f"⚠️ *সতর্কতা: API এরর!*\nকারণ: `{error_detail}`", parse_mode='Markdown')
+            bot.reply_to(message, f"⚠️ *সতর্কতা: API এরর!*\nকারণ: `{last_error}`", parse_mode='Markdown')
 
     except Exception as e:
         print("Error:", e)
-        error_msg = (
-            "⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\n"
-            f"কারণ: `{str(e)}`"
-        )
-        bot.reply_to(message, error_msg, parse_mode='Markdown')
+        bot.reply_to(message, f"⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি।*\nকারণ: `{str(e)}`", parse_mode='Markdown')
 
-bot.infinity_polling()
+if __name__ == "__main__":
+    bot.remove_webhook()
+    time.sleep(1)
+    bot.infinity_polling(skip_pending=True)
