@@ -7,7 +7,6 @@ import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import telebot
 from PIL import Image
-
 API_KEY = os.environ.get("GEMINI_API_KEY")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
@@ -45,7 +44,6 @@ def handle_chart_image(message):
         "⏳ দয়া করে কয়েক সেকেন্ড অপেক্ষা করুন..."
     )
     bot.reply_to(message, wait_msg, parse_mode='Markdown')
-
     try:
         largest_photo = message.photo.pop()
         file_info = bot.get_file(largest_photo.file_id)
@@ -78,8 +76,7 @@ def handle_chart_image(message):
 
 ⚠️ _বিঃদ্রঃ নিজস্ব ঝুঁকি ব্যবস্থাপনা (Risk Management) মেনে ট্রেড করুন।_
 """
-
-        models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
+    models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
         reply_text = None
         last_error = ""
 
@@ -98,34 +95,24 @@ def handle_chart_image(message):
 
         for model_name in models:
             try:
-    api_url = 
-    "/".join(["https://googleapis.com", 
-    "v1beta", "models", f"
-    {model_name}:generateContent"])
-             res = requests.post(api_url, headers=headers, json=data, timeout=50)
+                api_url = f"https://googleapis.com{model_name}:generateContent"
+                res = requests.post(api_url, headers=headers, json=data, timeout=50)
                 res_json = res.json()
 
-                candidates = res_json.get("candidates", [])
-                if len(candidates) > 0:
-                    first_candidate = candidates.pop(0)
-                    parts = first_candidate.get("content", {}).get("parts", [])
-                    if len(parts) > 0:
-                        first_part = parts.pop(0)
-                        if "text" in first_part:
-                            reply_text = first_part["text"]
-                            break
+                if "candidates" in res_json and len(res_json["candidates"]) > 0:
+                    candidate = res_json["candidates"][0]
+                    parts = candidate.get("content", {}).get("parts", [])
+                    if len(parts) > 0 and "text" in parts[0]:
+                        reply_text = parts[0]["text"]
+                        break
                 else:
                     last_error = res_json.get("error", {}).get("message", str(res_json))
                     time.sleep(1)
             except Exception as req_err:
                 last_error = str(req_err)
                 time.sleep(1)
-
-        if reply_text:
-            try:
-                bot.reply_to(message, reply_text, parse_mode='Markdown')
-            except Exception:
-                bot.reply_to(message, reply_text)
+    if reply_text:
+            bot.reply_to(message, reply_text, parse_mode='Markdown')
         else:
             bot.reply_to(message, f"⚠️ *সতর্কতা: API এরর!*\nকারণ: `{last_error}`", parse_mode='Markdown')
 
