@@ -7,6 +7,7 @@ import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import telebot
 from PIL import Image
+
 API_KEY = os.environ.get("GEMINI_API_KEY")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
@@ -72,11 +73,12 @@ def handle_chart_image(message):
 ⏱️ *মার্কেট টাইম:* *[চার্টের টাইমফ্রেম বুঝে লেখো, যেমন: ১-৩ মিনিট]*
 
 🔍 *AI চার্ট অ্যানালাইসিস:*
-> [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনের সংক্ষিপ্ত ও নির্ভুল ব্যাখ্যা লেখো]
+> [চার্টের ট্রেন্ড, ক্যান্ডেল রিজেকশন এবং সাপোর্ট-রেজিস্ট্যান্স লেভেলের ওপর ভিত্তি করে ২-৩ লাইনের সংক্ষিপ্ত ব্যাখ্যা]
 
 ⚠️ _বিঃদ্রঃ নিজস্ব ঝুঁকি ব্যবস্থাপনা (Risk Management) মেনে ট্রেড করুন।_
 """
-    models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
+
+        models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"]
         reply_text = None
         last_error = ""
 
@@ -96,7 +98,7 @@ def handle_chart_image(message):
         for model_name in models:
             try:
                 api_url = f"https://googleapis.com{model_name}:generateContent"
-                res = requests.post(api_url, headers=headers, json=data, timeout=50)
+                res = requests.post(api_url, headers=headers, json=data, timeout=30)
                 res_json = res.json()
 
                 if "candidates" in res_json and len(res_json["candidates"]) > 0:
@@ -111,14 +113,15 @@ def handle_chart_image(message):
             except Exception as req_err:
                 last_error = str(req_err)
                 time.sleep(1)
-    if reply_text:
+
+        if reply_text:
             bot.reply_to(message, reply_text, parse_mode='Markdown')
         else:
             bot.reply_to(message, f"⚠️ *সতর্কতা: API এরর!*\nকারণ: `{last_error}`", parse_mode='Markdown')
 
     except Exception as e:
         print("Error:", e)
-        bot.reply_to(message, f"⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি।*\nকারণ: `{str(e)}`", parse_mode='Markdown')
+        bot.reply_to(message, f"⚠️ *সতর্কতা: চার্টটি অ্যানালাইসিস করা সম্ভব হয়নি!*\nকারণ: `{e}`", parse_mode='Markdown')
 
 if __name__ == "__main__":
     bot.remove_webhook()
