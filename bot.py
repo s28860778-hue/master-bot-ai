@@ -97,7 +97,8 @@ def handle_chart_image(message):
 
         for model_name in models:
             try:
-                api_url = f"https://googleapis.com{model_name}:generateContent"
+            api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
+
                 res = requests.post(api_url, headers=headers, json=data, timeout=30)
                 res_json = res.json()
 
