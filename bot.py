@@ -46,7 +46,7 @@ def handle_chart_image(message):
     )
     bot.reply_to(message, wait_msg, parse_mode='Markdown')
     try:
-        largest_photo = message.photo.pop()
+        largest_photo = message.photo[-1]
         file_info = bot.get_file(largest_photo.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
@@ -97,10 +97,9 @@ def handle_chart_image(message):
 
         for model_name in models:
             try:
-              
-              api_url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
-              res = requests.post(api_url, headers=headers, json=data, timeout=30)
-              res_json = res.json()
+                api_url = f"https://googleapis.com{model_name}:generateContent"
+                res = requests.post(api_url, headers=headers, json=data, timeout=30)
+                res_json = res.json()
 
                 if "candidates" in res_json and len(res_json["candidates"]) > 0:
                     candidate = res_json["candidates"][0]
